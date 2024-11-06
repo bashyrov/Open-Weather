@@ -1,0 +1,88 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Dashboard, {{ user.username }}!</h1>
+        {% if user.users_city %}
+            {% if city and city.weekly_forecast %}
+                <h2>Weather in {{ city.city_name }}</h2>
+                      <div class="row row-cols-1 row-cols-md-6 mb-3 text-center">
+                            {% for day, data in city.weekly_forecast.items %}
+                                <div class="col">
+                                    <div class="card mb-4 rounded-3 shadow-sm">
+                                        <div class="card-header py-3">
+                                            <h4 class="my-0 fw-normal">{{ day }}</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <h1 class="card-title pricing-card-title">{{ data.avg_temperature }}<small class="text-body-secondary fw-light"> °C</small></h1>
+                                            <ul class="list-unstyled mt-3 mb-4">
+                                                <li>{{ data.condition }}</li>
+                                                <li>Humidity: {{ data.humidity }}%</li>
+                                                <li>Rain Chance: {{ data.rain_chance }}%</li>
+                                                {% for hour, hourly_data in data.hourly_forecast.items %}
+                                                    <li>{{ hour }} - {{ hourly_data.temperature }} °C - {{ hourly_data.humidity }}% - {{ hourly_data.condition }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+            {% else %}
+                <p>We do not have weather data available for this city.</p>
+            {% endif %}
+        {% else %}
+                <p>Provide your city</p>
+        {% endif %}
+<div class="row g-3">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <form action="{% url 'users:dashboard' %}" method="POST">
+                {% csrf_token %}
+                    <div class="col-12">
+                      <label for="{{ form.username.id_for_label }}" class="form-label">Email<span class="text-body-secondary">(Optional)</span></label>
+                        {{ form.username }}
+                      <div class="invalid-feedback">
+                        Please enter a valid email address.
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <label for="{{ form.tg_username.id_for_label }}" class="form-label">Telegram Username</label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text">@</span>
+                        {{ form.tg_username }}
+                      <div class="invalid-feedback">
+                          Your username is required.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <label for="{{ form.users_city.id_for_label }}" class="form-label">City</label>
+                      {{ form.users_city }}
+                      <div class="invalid-feedback">
+                        Please enter your city.
+                      </div>
+                    </div>
+                    <div class="col-12">
+                          <label for="{{ form.del_time.id_for_label }}" class="form-label">Time<span class="text-body-secondary">(For Weather Notifications)</span></label>
+                          {{ form.del_time }}
+                          <div class="invalid-feedback">
+                            Please enter a time for tg notifications.
+                          </div>
+                        </div>
+                <button type="submit">Search</button>
+</form>
+</div>
+<style>
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Weather24
+{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Weather24</h1>
+
+    {% if weather_data %}
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+            {% for weather in weather_data %}
+                <div class="col">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">{{ weather.city_name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">{{ weather.temperature }}<small class="text-body-secondary fw-light"> °C</small></h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>{{ weather.condition }}</li>
+                                <li>Humidity: {{ weather.humidity }}%</li>
+                                <li>Rain Chance: {{ weather.rain_chance }}%</li>
+                            </ul>
+                            <a href="{% url 'main:city_detail' city_name=weather.city_name %}" class="w-100 btn btn-lg btn-outline-primary">
+                                More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>We do not have weather data available for this city.</p>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h2>Search City:</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+{% endblock %}
