@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2024
+# Copyright (C) 2015-2023
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -69,16 +69,6 @@ class ChatInviteLink(TelegramObject):
             created using this link.
 
             .. versionadded:: 13.8
-        subscription_period (:obj:`int`, optional): The number of seconds the subscription will be
-            active for before the next payment.
-
-            .. versionadded:: 21.5
-        subscription_price (:obj:`int`, optional): The amount of Telegram Stars a user must pay
-            initially and after each subsequent subscription period to be a member of the chat
-            using the link.
-
-            .. versionadded:: 21.5
-
     Attributes:
         invite_link (:obj:`str`): The invite link. If the link was created by another chat
             administrator, then the second part of the link will be replaced with ``'…'``.
@@ -106,30 +96,19 @@ class ChatInviteLink(TelegramObject):
             created using this link.
 
             .. versionadded:: 13.8
-        subscription_period (:obj:`int`): Optional. The number of seconds the subscription will be
-            active for before the next payment.
-
-            .. versionadded:: 21.5
-        subscription_price (:obj:`int`): Optional. The amount of Telegram Stars a user must pay
-            initially and after each subsequent subscription period to be a member of the chat
-            using the link.
-
-            .. versionadded:: 21.5
 
     """
 
     __slots__ = (
-        "creates_join_request",
-        "creator",
-        "expire_date",
         "invite_link",
+        "creator",
         "is_primary",
         "is_revoked",
+        "expire_date",
         "member_limit",
         "name",
+        "creates_join_request",
         "pending_join_request_count",
-        "subscription_period",
-        "subscription_price",
     )
 
     def __init__(
@@ -139,14 +118,12 @@ class ChatInviteLink(TelegramObject):
         creates_join_request: bool,
         is_primary: bool,
         is_revoked: bool,
-        expire_date: Optional[datetime.datetime] = None,
-        member_limit: Optional[int] = None,
-        name: Optional[str] = None,
-        pending_join_request_count: Optional[int] = None,
-        subscription_period: Optional[int] = None,
-        subscription_price: Optional[int] = None,
+        expire_date: datetime.datetime = None,
+        member_limit: int = None,
+        name: str = None,
+        pending_join_request_count: int = None,
         *,
-        api_kwargs: Optional[JSONDict] = None,
+        api_kwargs: JSONDict = None,
     ):
         super().__init__(api_kwargs=api_kwargs)
         # Required
@@ -163,9 +140,6 @@ class ChatInviteLink(TelegramObject):
         self.pending_join_request_count: Optional[int] = (
             int(pending_join_request_count) if pending_join_request_count is not None else None
         )
-        self.subscription_period: Optional[int] = subscription_period
-        self.subscription_price: Optional[int] = subscription_price
-
         self._id_attrs = (
             self.invite_link,
             self.creates_join_request,
@@ -177,9 +151,7 @@ class ChatInviteLink(TelegramObject):
         self._freeze()
 
     @classmethod
-    def de_json(
-        cls, data: Optional[JSONDict], bot: Optional["Bot"] = None
-    ) -> Optional["ChatInviteLink"]:
+    def de_json(cls, data: Optional[JSONDict], bot: "Bot") -> Optional["ChatInviteLink"]:
         """See :meth:`telegram.TelegramObject.de_json`."""
         data = cls._parse_data(data)
 

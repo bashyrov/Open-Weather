@@ -1,17 +1,19 @@
 {% extends 'main/base.html' %}
 
-{% block head %}
-{% endblock %}
 
 {% block title %}
 {{ city_name }}
 {% endblock %}
-
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" href=" {% static 'main/css/city_detail.css' %}">
+{% endblock %}
 {% block content %}
-    <h1>Weather in {{ city_name }} - {{ city.temperature }} °C</h1>
+    <center><h1 class="display-5 fw-bold text-body-emphasis">{{ city_name }} <small class="text-body-secondary fw-light"> ({{ city.temperature }} °C) </small></h1></center>
 
     {% if city and city.weekly_forecast %}
-        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+<!--        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">-->
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center mt-4">
             {% for day, data in city.weekly_forecast.items %}
                 <div class="col">
                     <div class="card mb-4 rounded-3 shadow-sm">
@@ -19,18 +21,55 @@
                             <h4 class="my-0 fw-normal">{{ day }}</h4>
                         </div>
                         <div class="card-body">
-                            <h1 class="card-title pricing-card-title">{{ data.avg_temperature }}<small class="text-body-secondary fw-light"> °C</small></h1>
+                            <h1 class="card-title pricing-card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-thermometer-sun" viewBox="0 0 16 16">
+                                      <path d="M5 12.5a1.5 1.5 0 1 1-2-1.415V2.5a.5.5 0 0 1 1 0v8.585A1.5 1.5 0 0 1 5 12.5"/>
+                                      <path d="M1 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM3.5 1A1.5 1.5 0 0 0 2 2.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0L5 10.486V2.5A1.5 1.5 0 0 0 3.5 1m5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5m4.243 1.757a.5.5 0 0 1 0 .707l-.707.708a.5.5 0 1 1-.708-.708l.708-.707a.5.5 0 0 1 .707 0M8 5.5a.5.5 0 0 1 .5-.5 3 3 0 1 1 0 6 .5.5 0 0 1 0-1 2 2 0 0 0 0-4 .5.5 0 0 1-.5-.5M12.5 8a.5.5 0 0 1 .5-.5h1a.5.5 0 1 1 0 1h-1a.5.5 0 0 1-.5-.5m-1.172 2.828a.5.5 0 0 1 .708 0l.707.708a.5.5 0 0 1-.707.707l-.708-.707a.5.5 0 0 1 0-.708M8.5 12a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                                {{ data.avg_temperature }}
+                                <small class="text-body-secondary fw-light"> °C</small></h1>
                             <ul class="list-unstyled mt-3 mb-4">
-                                <li>{{ data.condition }}</li>
-                                <li>Humidity: {{ data.humidity }}%</li>
-                                <li>Rain Chance: {{ data.rain_chance }}%</li>
-                                {% for hour, hourly_data in data.hourly_forecast.items %}
-                                    <li>{{ hour }} - {{ hourly_data.temperature }} °C - {{ hourly_data.humidity }}% - {{ hourly_data.condition }}</li>
-                                {% endfor %}
+                                <li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud" viewBox="0 0 16 16">
+                                      <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                                    </svg>
+                                    {{ data.condition }}
+                                </li>
+                                <li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moisture" viewBox="0 0 16 16">
+                                      <path d="M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a29 29 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a29 29 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001zm0 0-.364-.343zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267"/>
+                                    </svg>
+                                    Humidity: {{ data.humidity }}
+                                    <small class="text-body-secondary fw-light"> %</small>
+                                </li>
+                                <li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-umbrella" viewBox="0 0 16 16">
+                                      <path d="M8 0a.5.5 0 0 1 .5.5v.514C12.625 1.238 16 4.22 16 8c0 0 0 .5-.5.5-.149 0-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394A3.17 3.17 0 0 0 13 7.5c-.638 0-1.178.213-1.564.434a3.5 3.5 0 0 0-.555.394l-.025.023-.003.003s-.204.146-.353.146-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394 3.3 3.3 0 0 0-1.064-.39V13.5H8h.5v.039l-.005.083a3 3 0 0 1-.298 1.102 2.26 2.26 0 0 1-.763.88C7.06 15.851 6.587 16 6 16s-1.061-.148-1.434-.396a2.26 2.26 0 0 1-.763-.88 3 3 0 0 1-.302-1.185v-.025l-.001-.009v-.003s0-.002.5-.002h-.5V13a.5.5 0 0 1 1 0v.506l.003.044a2 2 0 0 0 .195.726c.095.191.23.367.423.495.19.127.466.229.879.229s.689-.102.879-.229c.193-.128.328-.304.424-.495a2 2 0 0 0 .197-.77V7.544a3.3 3.3 0 0 0-1.064.39 3.5 3.5 0 0 0-.58.417l-.004.004S5.65 8.5 5.5 8.5s-.352-.145-.352-.145l-.004-.004a3.5 3.5 0 0 0-.58-.417A3.17 3.17 0 0 0 3 7.5c-.638 0-1.177.213-1.564.434a3.5 3.5 0 0 0-.58.417l-.004.004S.65 8.5.5 8.5C0 8.5 0 8 0 8c0-3.78 3.375-6.762 7.5-6.986V.5A.5.5 0 0 1 8 0M6.577 2.123c-2.833.5-4.99 2.458-5.474 4.854A4.1 4.1 0 0 1 3 6.5c.806 0 1.48.25 1.962.511a9.7 9.7 0 0 1 .344-2.358c.242-.868.64-1.765 1.271-2.53m-.615 4.93A4.16 4.16 0 0 1 8 6.5a4.16 4.16 0 0 1 2.038.553 8.7 8.7 0 0 0-.307-2.13C9.434 3.858 8.898 2.83 8 2.117c-.898.712-1.434 1.74-1.731 2.804a8.7 8.7 0 0 0-.307 2.131zm3.46-4.93c.631.765 1.03 1.662 1.272 2.53.233.833.328 1.66.344 2.358A4.14 4.14 0 0 1 13 6.5c.77 0 1.42.23 1.897.477-.484-2.396-2.641-4.355-5.474-4.854z"/>
+                                    </svg>
+                                    Rain Chance: {{ data.rain_chance }}
+                                    <small class="text-body-secondary fw-light"> %</small>
+                                </li>
                             </ul>
-                            <a href="{% url 'main:city_detail' city_name=city_name %}" class="w-100 btn btn-lg btn-outline-primary">
-                                Read More
-                            </a>
+                            <table class="table" height="350px">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Day</th>
+                                        <th scope="col">Temperature (°C)</th>
+                                        <th scope="col">Humidity (%)</th>
+                                        <th scope="col">Condition</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for day, hourly_data in data.hourly_forecast.items %}
+                                    <tr>
+                                        <td height="89px">{{ day }}</td>
+                                        <td>{{ hourly_data.temp_c }}</td>
+                                        <td>{{ hourly_data.humidity }}</td>
+                                        <td>{{ hourly_data.condition }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

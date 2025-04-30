@@ -7,4 +7,8 @@ class User(AbstractUser):
     tg_username = models.CharField('Telegram Username', max_length=50, default="")
     del_time = models.TimeField('Deletion Time', null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        self.users_city = str(self.users_city).title()
+        super(User, self).save(*args, **kwargs)
+
 

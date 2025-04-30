@@ -4,6 +4,7 @@ from Weather.users.models import User
 from Weather.users.telegram_bot import bot
 from Weather.main.views import get_weather
 
+
 class Command(BaseCommand):
     help = "Send weather notifications to users"
 

@@ -7,12 +7,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 
-sys.path.append(str(BASE_DIR))
-sys.path.append(str(BASE_DIR / 'Weather'))
-sys.path.append(str(BASE_DIR / 'Weather' / 'openweather'))
-sys.path.append(str(BASE_DIR / 'Weather' / 'main'))
-sys.path.append(str(BASE_DIR / 'Weather' / 'users'))
-sys.path.append(str(Path('/')))
+sys.path.append(os.path.join(BASE_DIR))
+sys.path.append(os.path.join(BASE_DIR, 'Weather'))
+sys.path.append(os.path.join(BASE_DIR, 'Weather', 'openweather'))
+sys.path.append(os.path.join(BASE_DIR, 'Weather', 'main'))
+sys.path.append(os.path.join(BASE_DIR, 'Weather', 'users'))
 
 
 def main():

@@ -1,0 +1,9 @@
+/* Этот стиль заставляет контейнер занимать всю высоту окна */
+.content-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.footer {
+    margin-top: auto; /* Это прижимает футер к низу страницы */
+}

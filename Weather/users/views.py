@@ -8,6 +8,8 @@ from main.models import City
 
 
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('users:dashboard')
     if request.method == 'POST':
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
@@ -18,7 +20,7 @@ def login(request):
                 auth.login(request, user)
                 return redirect('users:dashboard')
             else:
-                form.add_error(None, "Invalid email or password.")  # Ошибка при аутентификации
+                form.add_error(None, "Invalid email or password.")
         else:
             form.add_error(None, "Invalid email or password.")
     else:
@@ -29,6 +31,8 @@ def login(request):
 
 
 def registration(request):
+    if request.user.is_authenticated:
+        return redirect('users:dashboard')
     if request.method == 'POST':
         form = UserRegistrationForm(data=request.POST)
         if form.is_valid():
@@ -52,15 +56,16 @@ def dashboard(request):
         form = UserProfileForm(instance=request.user, data=request.POST)
         if form.is_valid():
             city_name = form.cleaned_data['users_city'].title()
+            print(city_name)
             if get_weather(city_name, 'current'):
                 form.save()
                 return redirect('users:dashboard')
             else:
-                form.add_error(None, "City not found. Please enter a valid city name.")
-                messages.error(request, "City is incorrect or not found!")
+                form.add_error(None, "Please, provide a valid data.")
+                messages.error(request, "Please, provide a valid data.")
         else:
-            form.add_error(None, "City not found. Please enter a valid city name.")
-            messages.error(request, "City is incorrect or not found!")
+            form.add_error(None, "Please, provide a valid data.")
+            messages.error(request, "Please, provide a valid data.")
     else:
         form = UserProfileForm(instance=request.user)
         if request.user.users_city:

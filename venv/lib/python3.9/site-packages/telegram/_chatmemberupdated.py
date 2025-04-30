@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2024
+# Copyright (C) 2015-2023
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram ChatMemberUpdated."""
 import datetime
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Dict, Optional, Tuple, Union
 
 from telegram._chat import Chat
 from telegram._chatinvitelink import ChatInviteLink
@@ -63,11 +63,6 @@ class ChatMemberUpdated(TelegramObject):
             chat via a chat folder invite link
 
             .. versionadded:: 20.3
-        via_join_request (:obj:`bool`, optional): :obj:`True`, if the user joined the chat after
-            sending a direct join request without using an invite link and being approved by
-            an administrator
-
-            .. versionadded:: 21.2
 
     Attributes:
         chat (:class:`telegram.Chat`): Chat the user belongs to.
@@ -85,23 +80,17 @@ class ChatMemberUpdated(TelegramObject):
             chat via a chat folder invite link
 
             .. versionadded:: 20.3
-        via_join_request (:obj:`bool`): Optional. :obj:`True`, if the user joined the chat after
-            sending a direct join request without using an invite link and being approved
-            by an administrator
-
-            .. versionadded:: 21.2
 
     """
 
     __slots__ = (
         "chat",
-        "date",
         "from_user",
-        "invite_link",
-        "new_chat_member",
+        "date",
         "old_chat_member",
+        "new_chat_member",
+        "invite_link",
         "via_chat_folder_invite_link",
-        "via_join_request",
     )
 
     def __init__(
@@ -111,11 +100,10 @@ class ChatMemberUpdated(TelegramObject):
         date: datetime.datetime,
         old_chat_member: ChatMember,
         new_chat_member: ChatMember,
-        invite_link: Optional[ChatInviteLink] = None,
-        via_chat_folder_invite_link: Optional[bool] = None,
-        via_join_request: Optional[bool] = None,
+        invite_link: ChatInviteLink = None,
+        via_chat_folder_invite_link: bool = None,
         *,
-        api_kwargs: Optional[JSONDict] = None,
+        api_kwargs: JSONDict = None,
     ):
         super().__init__(api_kwargs=api_kwargs)
         # Required
@@ -128,7 +116,6 @@ class ChatMemberUpdated(TelegramObject):
 
         # Optionals
         self.invite_link: Optional[ChatInviteLink] = invite_link
-        self.via_join_request: Optional[bool] = via_join_request
 
         self._id_attrs = (
             self.chat,
@@ -141,9 +128,7 @@ class ChatMemberUpdated(TelegramObject):
         self._freeze()
 
     @classmethod
-    def de_json(
-        cls, data: Optional[JSONDict], bot: Optional["Bot"] = None
-    ) -> Optional["ChatMemberUpdated"]:
+    def de_json(cls, data: Optional[JSONDict], bot: "Bot") -> Optional["ChatMemberUpdated"]:
         """See :meth:`telegram.TelegramObject.de_json`."""
         data = cls._parse_data(data)
 
@@ -162,7 +147,7 @@ class ChatMemberUpdated(TelegramObject):
 
         return super().de_json(data=data, bot=bot)
 
-    def _get_attribute_difference(self, attribute: str) -> tuple[object, object]:
+    def _get_attribute_difference(self, attribute: str) -> Tuple[object, object]:
         try:
             old = self.old_chat_member[attribute]
         except KeyError:
@@ -177,9 +162,9 @@ class ChatMemberUpdated(TelegramObject):
 
     def difference(
         self,
-    ) -> dict[
+    ) -> Dict[
         str,
-        tuple[
+        Tuple[
             Union[str, bool, datetime.datetime, User], Union[str, bool, datetime.datetime, User]
         ],
     ]:
@@ -198,7 +183,7 @@ class ChatMemberUpdated(TelegramObject):
         .. versionadded:: 13.5
 
         Returns:
-            dict[:obj:`str`, tuple[:class:`object`, :class:`object`]]: A dictionary mapping
+            Dict[:obj:`str`, Tuple[:class:`object`, :class:`object`]]: A dictionary mapping
             attribute names to tuples of the form ``(old_value, new_value)``
         """
         # we first get the names of the attributes that have changed

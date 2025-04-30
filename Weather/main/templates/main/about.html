@@ -3,8 +3,95 @@
 {% block title %}
 Explore Weather
 {% endblock %}
+{% block head %}
+{% load static %}
+    <link rel="stylesheet" href=" {% static 'main/css/base.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Explore Page</h1>
+
+<div class="px-4 py-5 my-5 text-center">
+        <img class="d-block mx-auto mb-4" src="{% static 'main/images/w24.svg' %}" alt="" width="72" height="57">
+        <h1 class="display-5 fw-bold text-body-emphasis">Explore <span class="text-body-secondary">Weather24</span></h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4">
+            Weather24 is a service that allows you to track real-time weather conditions and receive daily notifications about the weather in your selected city.
+              Users can set up Telegram notifications to stay updated on temperature changes, precipitation chances, and other important weather data,
+              including daily and weekly forecasts.
+          </p>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+
+            <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="window.location.href='{% url 'users:registration' %}'">Start Explore</button>
+          </div>
+        </div>
+    </div>
+<div class="container px-4 py-5" id="custom-cards">
+  {% load static %}
+    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+      <div class="col">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('{% static 'main/images/rain.jpg' %}');">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Short title, fast updates</h3>
+            <ul class="d-flex list-unstyled mt-auto">
+              <li class="me-auto">
+                <img src="{% static 'main/images/w24-white.svg' %}" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+              </li>
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
+                <small>Earth</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
+                <small>3d</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('{% static 'main/images/wind.jpg' %}');">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Personalized notifications</h3>
+            <ul class="d-flex list-unstyled mt-auto">
+              <li class="me-auto">
+                {% load static %}
+                <img src="{% static 'main/images/w24-white.svg' %}" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+              </li>
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
+                <small>Pakistan</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
+                <small>4d</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('{% static 'main/images/sunny.jpg' %}');">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">User-friendly interface</h3>
+            <ul class="d-flex list-unstyled mt-auto">
+              <li class="me-auto">
+                <img src="{% static 'main/images/w24-white.svg' %}" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+              </li>
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
+                <small>California</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
+                <small>5d</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 

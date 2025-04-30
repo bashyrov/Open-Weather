@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 #  A library that provides a Python interface to the Telegram Bot API
-#  Copyright (C) 2015-2024
+#  Copyright (C) 2015-2023
 #  Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,7 @@ library.
 import asyncio
 import contextlib
 import sys
-from collections.abc import AsyncIterator, Coroutine
-from typing import Any, Callable, Optional, Union
+from typing import Any, AsyncIterator, Callable, Coroutine, Dict, List, Optional, Union
 
 try:
     from aiolimiter import AsyncLimiter
@@ -63,7 +62,7 @@ class AIORateLimiter(BaseRateLimiter[int]):
 
         .. code-block:: bash
 
-           pip install "python-telegram-bot[rate-limiter]"
+           pip install python-telegram-bot[rate-limiter]
 
     The rate limiting is applied by combining two levels of throttling and :meth:`process_request`
     roughly boils down to::
@@ -137,7 +136,7 @@ class AIORateLimiter(BaseRateLimiter[int]):
         if not AIO_LIMITER_AVAILABLE:
             raise RuntimeError(
                 "To use `AIORateLimiter`, PTB must be installed via `pip install "
-                '"python-telegram-bot[rate-limiter]"`.'
+                "python-telegram-bot[rate-limiter]`."
             )
         if overall_max_rate and overall_time_period:
             self._base_limiter: Optional[AsyncLimiter] = AsyncLimiter(
@@ -153,7 +152,7 @@ class AIORateLimiter(BaseRateLimiter[int]):
             self._group_max_rate = 0
             self._group_time_period = 0
 
-        self._group_limiters: dict[Union[str, int], AsyncLimiter] = {}
+        self._group_limiters: Dict[Union[str, int], AsyncLimiter] = {}
         self._max_retries: int = max_retries
         self._retry_after_event = asyncio.Event()
         self._retry_after_event.set()
@@ -188,31 +187,32 @@ class AIORateLimiter(BaseRateLimiter[int]):
         self,
         chat: bool,
         group: Union[str, int, bool],
-        callback: Callable[..., Coroutine[Any, Any, Union[bool, JSONDict, list[JSONDict]]]],
+        callback: Callable[..., Coroutine[Any, Any, Union[bool, JSONDict, List[JSONDict]]]],
         args: Any,
-        kwargs: dict[str, Any],
-    ) -> Union[bool, JSONDict, list[JSONDict]]:
+        kwargs: Dict[str, Any],
+    ) -> Union[bool, JSONDict, List[JSONDict]]:
         base_context = self._base_limiter if (chat and self._base_limiter) else null_context()
         group_context = (
             self._get_group_limiter(group) if group and self._group_max_rate else null_context()
         )
 
-        async with group_context, base_context:
-            # In case a retry_after was hit, we wait with processing the request
-            await self._retry_after_event.wait()
+        async with group_context:  # skipcq: PTC-W0062
+            async with base_context:
+                # In case a retry_after was hit, we wait with processing the request
+                await self._retry_after_event.wait()
 
-            return await callback(*args, **kwargs)
+                return await callback(*args, **kwargs)
 
     # mypy doesn't understand that the last run of the for loop raises an exception
     async def process_request(
         self,
-        callback: Callable[..., Coroutine[Any, Any, Union[bool, JSONDict, list[JSONDict]]]],
+        callback: Callable[..., Coroutine[Any, Any, Union[bool, JSONDict, List[JSONDict]]]],
         args: Any,
-        kwargs: dict[str, Any],
-        endpoint: str,  # noqa: ARG002
-        data: dict[str, Any],
+        kwargs: Dict[str, Any],
+        endpoint: str,  # skipcq: PYL-W0613
+        data: Dict[str, Any],
         rate_limit_args: Optional[int],
-    ) -> Union[bool, JSONDict, list[JSONDict]]:
+    ) -> Union[bool, JSONDict, List[JSONDict]]:
         """
         Processes a request by applying rate limiting.
 
@@ -251,7 +251,7 @@ class AIORateLimiter(BaseRateLimiter[int]):
                     _LOGGER.exception(
                         "Rate limit hit after maximum of %d retries", max_retries, exc_info=exc
                     )
-                    raise
+                    raise exc
 
                 sleep = exc.retry_after + 0.1
                 _LOGGER.info("Rate limit hit. Retrying after %f seconds", sleep)
