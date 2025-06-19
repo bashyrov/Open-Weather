@@ -21,7 +21,7 @@
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/yourusername/weather24.git
+git clone https://github.com/bashyrov/weather24.git
 cd weather24
 python -m venv venv
 source venv/bin/activate
