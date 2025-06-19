@@ -1,22 +1,28 @@
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-venv/
-env/
-.venv/
-.idea/
+*.sqlite3
 *.log
-*.tmp
-*.swp
-*~
+
+# Environments
 .env
-credentials.json
-dist/
-build/
-*.egg-info/
-.cache/
-.coverage
-*.py,cover
-.ipynb_checkpoints/
+venv/
+*.env
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Django
 db.sqlite3
+*.pyc
+staticfiles/
+media/
+
+# Coverage
+htmlcov/
+coverage.xml
